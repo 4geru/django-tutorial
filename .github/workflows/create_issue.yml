@@ -1,0 +1,29 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will download a prebuilt Ruby version, install dependencies and run tests with Rake
+# For more information see: https://github.com/marketplace/actions/setup-ruby-jruby-and-truffleruby
+
+name: Ruby
+
+on: [ workflow_dispatch ]
+
+jobs:
+  list_up_versions:
+    name: create_issue
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.7
+      - name: Run script
+        env:
+          GH_API_ACCESS_TOKEN: ${{ secrets.GH_API_ACCESS_TOKEN }}
+        run: |
+          ruby --version
+          bundle init # Bundler::LockfileParser の呼び出しのためにこうしておく
+          ruby create_issue.rb
